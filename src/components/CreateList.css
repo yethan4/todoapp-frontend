@@ -1,0 +1,30 @@
+#add-new-list {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+#add-new-list input {
+  width: 200px;
+  border: none;
+  outline: none;
+  color: rgb(31, 31, 31);
+  background-color: rgb(145, 145, 145);
+  padding: 5px 10px;
+  font-size: 15px;
+  border-radius: 4px;
+}
+
+#add-new-list input::placeholder{
+  color: rgb(43, 43, 43);
+}
+
+#add-new-list button {
+  outline: none;
+  border: none;
+  font-size: 20px;
+  background-color: rgb(107, 107, 107);
+  color: rgb(240, 240, 240);
+  cursor: pointer;
+  border-radius: 4px;
+}
