@@ -40,21 +40,6 @@
   color: #a0a0a0; 
 }
 
-.delete-btn {
-  background: none;
-  border: none;
-  color: #ff6b6b; 
-  font-size: 20px;
-  cursor: pointer;
-  padding: 0 8px;
-  transition: transform 0.2s;
-}
-
-.delete-btn:hover {
-  transform: scale(1.2);
-  color: #ff4444; 
-}
-
 
 .task-card:hover {
   background-color: #3a3a3a;

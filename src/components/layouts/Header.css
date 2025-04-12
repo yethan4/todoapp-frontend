@@ -9,6 +9,7 @@ header{
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 1000;
 }
 
 .logo a {
@@ -29,10 +30,12 @@ header{
   top: 50px;
   padding-top: 5px;
   padding-bottom: 1px;
-  background-color: #2C2C2C;
+  background-color: #3a3a3a;
   display: flex;
   flex-direction: column;
   gap: 2px;
+  z-index: 50;
+  border-radius: 4px;
 }
 
 .menu ul {
