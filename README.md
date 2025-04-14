@@ -1,70 +1,106 @@
-# Getting Started with Create React App
+# To-Do App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Technologies Used
 
-## Available Scripts
+- **Frontend**: React
+- **Backend**: Python (Django REST Framework, providing REST API for task management, JWT for user authentication)
 
-In the project directory, you can run:
+## Description
 
-### `npm start`
+The backend, built with Django REST Framework, provides a RESTful API for managing tasks — including creating, deleting, and marking them as completed or not. It also handles user authentication using JWT (JSON Web Tokens) to ensure secure access to user-specific data. 
+[backend-code](https://github.com/yethan4/todoapp-backend)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The frontend, built with React, offers a clean and interactive user interface for viewing tasks, creating new ones, deleting them, and toggling their completion status. It communicates with the backend via HTTP requests, using JWT for authentication, which allows secure, stateless communication between the client and server.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Purpose & Notes
 
-### `npm test`
+This is a very simple and basic application, created primarily to demonstrate my understanding of:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Building a basic backend with Django REST Framework
 
-### `npm run build`
+Implementing JWT-based authentication
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Connecting a React frontend with an API backend
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+While the frontend currently lacks optimization and polish, it serves its purpose as a working interface. I plan to improve and expand the application in the future by adding more features, better UI/UX, persistent storage, and more advanced functionality.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+## Installation
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Backend Setup Instructions
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Follow these steps to set up the application locally:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+  1. **Clone the backend repository**
+  
+  &nbsp;&nbsp;&nbsp;&nbsp;In the project directory, you can run:
+  ```bash
+  git clone https://github.com/yethan4/todoapp-backend
+  cd todoapp-backend
+  ```
+  
+  2. **Create a Virtual Environment**
+  ```bash
+  python -m venv venv
+  ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+  3. **Then activate the virtual environment:**
+  
+  &nbsp;&nbsp;&nbsp;&nbsp;On macOS/Linux:
+  ```bash
+  source venv/bin/activate 
+  ```
+  &nbsp;&nbsp;&nbsp;&nbsp;On Windows
+  ```bash
+  venv\Scripts\activate
+  ```
+  4. **Install Dependencies**
+  ```bash
+  pip install -r requirements.txt
+  ```
+  5. **Apply Database Migrations**
+  ```bash
+  python manage.py migrate
+  ```
+  6. **Create a Superuser (optional)**
+  If you want to access the Django admin interface, you can create a superuser with the following command:
+  ```bash
+  python manage.py createsuperuser
+  ```
+  7. **Start the Backend Server**
+  Finally, run the server with::
+  ```bash
+  python manage.py runserver
+  ```
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Frontend Setup Instructions
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Follow these steps to set up the application locally:
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+  1. **Clone the frontend repository**
+  
+  In the project directory, you can run:
+  
+  ```bash
+  git clone https://github.com/yethan4/todoapp-frontend
+  cd todoapp-frontend
+  ```
+  
+  2. **Install Dependencies**
+  
+  If you're using npm:
+  ```bash
+  npm install
+  ```
+  
+  If you're using yarn:
+  ```bash
+  yarn install
+  ```
+  3. **Run project**
+  
+  Using npm:
+  ```bash
+  npm start
+  ```
