@@ -16,11 +16,9 @@ The frontend, built with React, offers a clean and interactive user interface fo
 
 This is a very simple and basic application, created primarily to demonstrate my understanding of:
 
-Building a basic backend with Django REST Framework
-
-Implementing JWT-based authentication
-
-Connecting a React frontend with an API backend
+* Building a basic backend with Django REST Framework
+* Implementing JWT-based authentication
+* Connecting a React frontend with an API backend
 
 While the frontend currently lacks optimization and polish, it serves its purpose as a working interface. I plan to improve and expand the application in the future by adding more features, better UI/UX, persistent storage, and more advanced functionality.
 
