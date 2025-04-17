@@ -1,6 +1,6 @@
 /* styles.css - wspólne style dla obu formularzy */
 .form-page {
-  max-width: 400px;
+  width: 350px;
   height: fit-content;
   margin: 2rem auto;
   padding: 2rem;

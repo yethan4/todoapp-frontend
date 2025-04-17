@@ -47,7 +47,6 @@ export const LoginPage = () => {
     }
   };
 
-
   return (
     <main>
       <div className="form-page login-page">
@@ -78,6 +77,8 @@ export const LoginPage = () => {
           </div>
 
           {errors.non_field_errors && <p className="error">{errors.non_field_errors}</p>}
+
+          {errors.detail && <p className="error">{errors.detail}</p>}
 
           <button type="submit" disabled={isLoading}>
             {isLoading ? 'Logging in...' : 'Login'}
