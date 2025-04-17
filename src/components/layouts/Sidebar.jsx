@@ -6,11 +6,12 @@ import { useEffect, useState } from "react";
 import { CreateList } from "../CreateList";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLists } from "../../context/ListContext";
 
 export const Sidebar = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const [lists, setLists] = useState([]);
+  const { lists, setLists } = useLists();
   const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
@@ -52,7 +53,9 @@ export const Sidebar = () => {
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
-    navigate(`/?date=${date.toISOString().split('T')[0]}`); 
+  
+    const formatted = date.toLocaleDateString('en-CA');
+    navigate(`/?date=${formatted}`);
   };
 
   useEffect(() => {

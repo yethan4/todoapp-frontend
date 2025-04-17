@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { CreateTask } from './CreateTask'
 import { TaskCard } from './TaskCard'
 
@@ -15,11 +15,12 @@ export const TaskList = () => {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
 
-  const fetchTasks = async () => {
+  const date = searchParams.get('date');
+  const taskList = searchParams.get('task_list');
+
+ const fetchTasks = useCallback(async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      const date = searchParams.get('date');
-      const taskList = searchParams.get('task_list');
       
       const params = {};
       if (date) params.date = date;
@@ -39,23 +40,27 @@ export const TaskList = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [searchParams]);
 
-  const handleTaskDelete = (taskId) => {
+  const handleTaskDelete = useCallback((taskId) => {
     setTasks(prevTasks => prevTasks.filter(task => task.pk !== taskId));
-  };
+  }, []);
 
-  const handleTaskUpdate = (taskId, updates) => {
-    setTasks(prevTasks => prevTasks.map(task => 
-      task.pk === taskId ? { ...task, ...updates } : task
-    ));
-  };
+  const handleTaskUpdate = useCallback((taskId="", updates) => {
+    if(taskId) {
+      setTasks(prevTasks => prevTasks.map(task => 
+        task.pk === taskId ? { ...task, ...updates } : task
+      ));
+    } else {
+      fetchTasks();
+    }
+  }, []);
 
   useEffect(() => {
     if (user) {
       fetchTasks();
     }
-  }, [user, searchParams]); 
+  }, [user, searchParams, fetchTasks]); 
 
   if (isLoading) {
     return <div>Loading tasks...</div>;
@@ -64,7 +69,6 @@ export const TaskList = () => {
   if (error) {
     return <div className="error-message">Error: {error}</div>;
   }
-
 
   return (
     <section className="content">
@@ -77,6 +81,8 @@ export const TaskList = () => {
           task={task} 
           onTaskDelete={handleTaskDelete}
           onTaskUpdate={handleTaskUpdate}
+          byDate={date || !taskList ? true : false}
+          byList={taskList ? true : false}
         />
       ))}
 

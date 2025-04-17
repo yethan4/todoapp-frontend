@@ -1,18 +1,3 @@
-.delete-btn {
-  background: none;
-  border: none;
-  color: #ff6b6b; 
-  font-size: 20px;
-  cursor: pointer;
-  padding: 0 8px;
-  transition: transform 0.2s;
-}
-
-.delete-btn:hover {
-  transform: scale(1.2);
-  color: #ff4444; 
-}
-
 /* styles.css - wspólne style dla obu formularzy */
 .form-page {
   max-width: 400px;
@@ -125,4 +110,38 @@
 
 .auth-link a:hover {
   text-decoration: underline;
+}
+
+
+/* buttons */
+
+.edit-btn,
+.delete-btn {
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.delete-btn {
+  color: #ff6b6b; 
+  font-size: 24px;
+}
+
+.edit-btn {
+  padding-top: 1px;
+  color: #fafafa; 
+  font-size: 12px;
+}
+
+.delete-btn:hover {
+  transform: scale(1.2);
+  color: #ff4444; 
+}
+
+.edit-btn:hover {
+  transform: scale(1.2);
+  color: #77ca74; 
 }
