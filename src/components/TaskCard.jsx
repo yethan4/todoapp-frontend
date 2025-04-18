@@ -117,7 +117,7 @@ export const TaskCard = ({ task, onTaskDelete, onTaskUpdate, byDate, byList}) =>
       const token = localStorage.getItem('accessToken');
 
       const response = await axios.patch(
-        `http://localhost:8000/api/tasks/${task.pk}/update/`,
+        `${process.env.REACT_APP_API_URL}/api/tasks/${task.pk}/update/`,
         { 
           title: title,
           completed: isCompleted,
