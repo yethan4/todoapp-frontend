@@ -1,0 +1,137 @@
+.sidebar{
+  width: 300px;
+  max-height: calc(100vh - 72px);
+  background-color: #272727;
+  padding: 10px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: auto;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #3d3d3d;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #474747;
+  border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.react-datepicker {
+  background-color: #2d2d2d; 
+  border: 1px solid #444; 
+  color: white; 
+  font-family: Arial, sans-serif;
+  z-index: 100;
+}
+
+.react-datepicker__header {
+  background-color: #3b3b3b; 
+  color: white; 
+  border-bottom: 1px solid #444;
+}
+
+.react-datepicker__current-month {
+  color: rgb(243, 243, 243);
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.react-datepicker__day-name {
+  color: #ccc; 
+}
+
+.react-datepicker__day {
+  background-color: #2d2d2d; 
+  color: white; 
+}
+
+.react-datepicker__day:hover{
+  background-color: #505050 !important;
+}
+
+.react-datepicker__day--today {
+  background-color: #444444; 
+  color: white; 
+  border-radius: 5px; 
+}
+
+.react-datepicker__day--selected {
+  background-color: #007bff; 
+  color: white;
+}
+
+.react-datepicker__day--disabled {
+  color: #888; 
+}
+
+.react-datepicker__day--outside-month {
+  color: #646464;
+}
+
+.categories {
+  width: 250px;
+  border-top: 1px solid gray;
+  margin-top: 15px;
+  padding-top: 10px;
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
+}
+
+
+.categories ul {
+  width: 250px;
+  list-style-type: none; 
+  margin: 0;
+  margin-top: 10px;
+  padding: 0;
+}
+
+.categories li {
+  margin-top: 2px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding-right: 5px;
+}
+
+.categories li a {
+  text-decoration: none;
+  color: white;
+  margin: 5px 0px;
+  padding: 10px 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+}
+
+.categories li a i {
+  font-size: 17px;
+}
+
+.categories li:hover {
+  background-color: #474747;
+}
+
+.active{
+  background-color: #474747;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding-right: 5px;
+}
+
