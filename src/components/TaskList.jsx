@@ -40,7 +40,7 @@ export const TaskList = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [searchParams]);
+  }, [taskList, date]);
 
   const handleTaskDelete = useCallback((taskId) => {
     setTasks(prevTasks => prevTasks.filter(task => task.pk !== taskId));
@@ -54,7 +54,7 @@ export const TaskList = () => {
     } else {
       fetchTasks();
     }
-  }, []);
+  }, [fetchTasks]);
 
   useEffect(() => {
     if (user) {
