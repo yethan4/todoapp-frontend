@@ -26,7 +26,7 @@ export const TaskCard = ({ task, onTaskDelete, onTaskUpdate, byDate, byList}) =>
     try {
       const token = localStorage.getItem('accessToken');
       const response = await axios.patch(
-        `http://localhost:8000/api/tasks/${task.pk}/set-completed/`,
+        `${process.env.REACT_APP_API_URL}/api/tasks/${task.pk}/set-completed/`,
         { completed: newState },
         {
           headers: {
@@ -60,7 +60,7 @@ export const TaskCard = ({ task, onTaskDelete, onTaskUpdate, byDate, byList}) =>
     try {
       const token = localStorage.getItem('accessToken');
       const response = await axios.delete(
-        `http://localhost:8000/api/tasks/${task.pk}/delete`,
+        `${process.env.REACT_APP_API_URL}/api/tasks/${task.pk}/delete`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,

@@ -30,7 +30,7 @@ export const RegisterPage = () => {
     setErrors({});
 
     try {
-      const response = await axios.post("http://localhost:8000/api/register/", formData);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/register/`, formData);
       console.log("Success!", response.data);
       setSuccessMessage("Registration Successful!");
     } catch (error) {

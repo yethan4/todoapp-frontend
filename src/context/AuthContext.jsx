@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
             Authorization: `Bearer ${accessToken}`,
           },
         };
-        await axios.post("http://127.0.0.1:8000/api/logout/", { refresh: refreshToken }, config);
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/logout/`, { refresh: refreshToken }, config);
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         setLoggedIn(false);

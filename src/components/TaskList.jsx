@@ -26,7 +26,7 @@ export const TaskList = () => {
       if (date) params.date = date;
       if (taskList) params.task_list = taskList;
       
-      const response = await axios.get('http://localhost:8000/api/tasks/', {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/`, {
         headers: {
           'Authorization': `Bearer ${token}`
         },

@@ -19,7 +19,7 @@ export const Sidebar = () => {
   const fetchLists = useCallback(async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await axios.get('http://localhost:8000/api/lists/', {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/lists/`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -35,7 +35,7 @@ export const Sidebar = () => {
       const token = localStorage.getItem('accessToken');
       // eslint-disable-next-line
       const response = await axios.delete(
-        `http://localhost:8000/api/lists/${slug}`,
+        `${process.env.REACT_APP_API_URL}/api/lists/${slug}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
