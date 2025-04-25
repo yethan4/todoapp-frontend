@@ -9,7 +9,7 @@ import { List, Task } from '../types/types';
 interface Props {
   task: Task;
   onTaskDelete: (pk: number) => void;
-  onTaskUpdate: () => void;
+  onTaskUpdate: (taskId: number, updates: Partial<Task>) => void;
   byDate: boolean;
   byList: boolean;
 }
@@ -60,7 +60,6 @@ export const TaskCard = ({ task, onTaskDelete, onTaskUpdate, byDate, byList}: Pr
       }
       
       setIsCompleted(!newState);
-      onTaskUpdate();
     } finally {
       setIsLoading(false);
     }
@@ -124,21 +123,23 @@ export const TaskCard = ({ task, onTaskDelete, onTaskUpdate, byDate, byList}: Pr
         setIsEditing(false);
         return;
       }
-    
+
     try{
       const token: string | null = localStorage.getItem('accessToken');
       const newDate: string | null = selectedDate instanceof Date
       ? selectedDate.toISOString().split('T')[0]
       : selectedDate;
 
+      const params: Partial<Task> = {
+        title: title,
+        completed: isCompleted,
+        task_list: selectedTaskList,
+        due_date: newDate
+      }
+
       const response: any = await axios.patch(
         `${process.env.REACT_APP_API_URL}/api/tasks/${task.pk}/update/`,
-        {
-          title: title,
-          completed: isCompleted,
-          task_list: selectedTaskList,
-          due_date: newDate
-        },
+        params,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -154,6 +155,7 @@ export const TaskCard = ({ task, onTaskDelete, onTaskUpdate, byDate, byList}: Pr
         else if ((task.due_date !== newDate) && byDate) 
           onTaskDelete(task.pk)
         else
+          onTaskUpdate(task.pk, params);
           setIsEditing(false)
       };
 
@@ -167,8 +169,6 @@ export const TaskCard = ({ task, onTaskDelete, onTaskUpdate, byDate, byList}: Pr
     }
 
   }
-
-  console.log(task)
 
   return (
     <div className={`task-card ${isCompleted ? 'completed' : ''}`}>

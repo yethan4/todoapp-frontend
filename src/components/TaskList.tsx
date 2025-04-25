@@ -6,25 +6,33 @@ import "./TaskList.css"
 import { useSearchParams } from 'react-router-dom'
 import axios from 'axios'
 
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from '../context/AuthContext'
+import { Task } from '../types/types'
+
+interface Params {
+  date?: string;
+  task_list?: string;
+}
 
 export const TaskList = () => {
-  const [tasks, setTasks] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
 
-  const date = searchParams.get('date');
-  const taskList = searchParams.get('task_list');
+  const date: string | null = searchParams.get('date');
+  const taskListName: string | null = searchParams.get('task_list');
 
- const fetchTasks = useCallback(async () => {
+ const fetchTasks = useCallback(
+  async (taskListName: string | null, date: string | null) => {
     try {
-      const token = localStorage.getItem('accessToken');
+      const token: string | null = localStorage.getItem('accessToken');
       
-      const params = {};
-      if (date) params.date = date;
-      if (taskList) params.task_list = taskList;
+      const params: Params = {
+        ...(date && { date }),
+        ...(taskListName && { task_list: taskListName })
+      }
       
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/`, {
         headers: {
@@ -35,33 +43,39 @@ export const TaskList = () => {
 
       console.log(response.data)
       setTasks(response.data);
-    } catch (err) {
-      console.error('Error fetching tasks:', err);
-      setError(err.response?.data?.message || 'Failed to fetch tasks');
+
+    } catch (error) {
+      if(axios.isAxiosError(error))
+        setError(error.response?.data?.message || 'Failed to fetch tasks');
+
     } finally {
       setIsLoading(false);
     }
-  }, [taskList, date]);
+  }, []);
 
-  const handleTaskDelete = useCallback((taskId) => {
+  const handleAddTask = useCallback((task: Task) => {
+    setTasks(prevTasks => [...prevTasks, task])
+  }, [])
+
+  const handleTaskDelete = useCallback((taskId: number) => {
     setTasks(prevTasks => prevTasks.filter(task => task.pk !== taskId));
   }, []);
 
-  const handleTaskUpdate = useCallback((taskId="", updates) => {
+  const handleTaskUpdate = useCallback((taskId: number, updates: Partial<Task>) => {
     if(taskId) {
       setTasks(prevTasks => prevTasks.map(task => 
         task.pk === taskId ? { ...task, ...updates } : task
       ));
     } else {
-      fetchTasks();
+      fetchTasks(taskListName, date);
     }
-  }, [fetchTasks]);
+  }, [fetchTasks, taskListName, date]);
 
   useEffect(() => {
     if (user) {
-      fetchTasks();
+      fetchTasks(taskListName, date);
     }
-  }, [user, searchParams, fetchTasks]); 
+  }, [user, taskListName, date, fetchTasks]); 
 
   if (isLoading) {
     return <div>Loading tasks...</div>;
@@ -73,7 +87,7 @@ export const TaskList = () => {
 
   return (
     <section className="content">
-      <CreateTask fetchTasks={fetchTasks} />
+      <CreateTask onTaskAdd={handleAddTask} />
 
       <div className="task-list">
       {tasks.filter(task => !task.completed).map(task => (
@@ -82,17 +96,19 @@ export const TaskList = () => {
           task={task} 
           onTaskDelete={handleTaskDelete}
           onTaskUpdate={handleTaskUpdate}
-          byDate={date || !taskList ? true : false}
-          byList={taskList ? true : false}
+          byDate={date || !taskListName ? true : false}
+          byList={taskListName ? true : false}
         />
       ))}
 
       {tasks.filter(task => task.completed).map(task => (
         <TaskCard 
           key={task.pk} 
-          task={task} 
+          task={task}
           onTaskDelete={handleTaskDelete}
           onTaskUpdate={handleTaskUpdate}
+          byDate={date || !taskListName ? true : false}
+          byList={taskListName ? true : false}
         />
       ))}
     </div>
