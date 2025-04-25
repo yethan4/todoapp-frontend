@@ -32,7 +32,8 @@ export const TaskList = () => {
         },
         params: params
       });
-      
+
+      console.log(response.data)
       setTasks(response.data);
     } catch (err) {
       console.error('Error fetching tasks:', err);

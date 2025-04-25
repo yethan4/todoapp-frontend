@@ -4,28 +4,41 @@ import axios from 'axios';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useLists } from '../context/ListContext';
+import { List, Task } from '../types/types';
 
-export const TaskCard = ({ task, onTaskDelete, onTaskUpdate, byDate, byList}) => {
-  const [isCompleted, setIsCompleted] = useState(task.completed);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [title, setTitle] = useState(task.title);
-  const [isEditing, setIsEditing] = useState(false);
-  const [toggleError, setToggleError] = useState(null);
-  const [deleteError, setDeleteError] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(task.due_date ? new Date(task.due_date) : null);
-  const [selectedOption, setSelectedOption] = useState(task.task_list);
+interface Props {
+  task: Task;
+  onTaskDelete: (pk: number) => void;
+  onTaskUpdate: () => void;
+  byDate: boolean;
+  byList: boolean;
+}
+
+export const TaskCard = ({ task, onTaskDelete, onTaskUpdate, byDate, byList}: Props) => {
+  const [isCompleted, setIsCompleted] = useState<boolean>(task.completed);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>(task.title);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [toggleError, setToggleError] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(
+    task.due_date ? new Date(task.due_date) : null
+  );
+  
+  const [selectedTaskList, setSelectedTaskList] = useState<string>(task.task_list ?? "");
+  
   const { lists } = useLists();
 
 
-  const handleToggle = async () => {
+  const handleToggle = async (): Promise<void> => {
     const newState = !isCompleted;
     setIsLoading(true);
     setToggleError(null);
-    
-    try {
-      const token = localStorage.getItem('accessToken');
-      const response = await axios.patch(
+
+    try{
+      const token: string | null = localStorage.getItem('accessToken');
+      const response: any = await axios.patch(
         `${process.env.REACT_APP_API_URL}/api/tasks/${task.pk}/set-completed/`,
         { completed: newState },
         {
@@ -35,94 +48,96 @@ export const TaskCard = ({ task, onTaskDelete, onTaskUpdate, byDate, byList}) =>
           }
         }
       );
-      
-      setIsCompleted(response.data.completed);
-    } catch (err) {
-      console.error('Error updating task:', err);
-      setToggleError(
-        err.response?.data?.error || 
-        err.response?.data?.detail || 
-        'Failed to update task status'
-      );
 
+      setIsCompleted(response.data.completed);
+    }catch(error){
+      if(axios.isAxiosError(error)){
+        setToggleError(
+          error.response?.data?.error ||
+          error.response?.data?.detail ||
+          'Failed to update task status'
+        )
+      }
+      
       setIsCompleted(!newState);
       onTaskUpdate();
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
-  const handleDeleteTask = async () => {
-
+  const handleDeleteTask = async (): Promise<void> => {
     setIsDeleting(true);
     setDeleteError(null);
-    
+
     try {
-      const token = localStorage.getItem('accessToken');
-      const response = await axios.delete(
+      const token: string | null = localStorage.getItem('accessToken');
+      const response: any = await axios.delete(
         `${process.env.REACT_APP_API_URL}/api/tasks/${task.pk}/delete`,
         {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${token}`
           }
         }
       );
-      
-      if (response.status === 204) {
+
+      if(response.status === 204)
         onTaskDelete(task.pk);
-      } else {
-        throw new Error('Unexpected response status');
-      }
-    } catch (err) {
-      console.error('Error deleting task:', err);
-      
-      let errorMessage = 'Failed to delete task';
-      if (err.response) {
-        if (err.response.status === 401) {
-          errorMessage = 'Session expired - please login again';
-        } else if (err.response.status === 404) {
+      else
+        throw new Error('Unexpected response status')
+    } catch(error) {
+      let errorMessage = 'Failed to delete task'
+      if(axios.isAxiosError(error)){
+        if (error.response?.status === 401) {
+          errorMessage = 'Session exipred - please login again';
+        } else if (error.response?.status === 404) {
           errorMessage = 'Task not found';
-        } else if (err.response.data?.detail) {
-          errorMessage = err.response.data.detail;
+        } else if (error.response?.data?.detail) {
+          errorMessage = error.response.data.detail;
         }
       }
-      
-      setDeleteError(errorMessage);
+
+      setDeleteError(errorMessage)
     } finally {
       setIsDeleting(false);
     }
-  };
+  }
 
   const dismissError = useCallback(() => {
     setToggleError(null);
     setDeleteError(null);
   }, []);
 
-  const handleCancel = (e) => {
+  const handleCancel = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault()
     setIsEditing(false);
-    setSelectedDate(task.due_date);
-    setSelectedOption(task.task_list);
+    setSelectedDate(task.due_date ? new Date(task.due_date) : null);
+    setSelectedTaskList(task.task_list ?? "");
   }
 
-  const handleChangeTask = async (e) => {
+  const handleChangeTask = async (e: React.FormEvent<HTMLButtonElement>): Promise<void> => {
     e.preventDefault()
 
-    if(task.task_list === selectedOption && task.due_date === selectedDate && title===task.title){
-      setIsEditing(false);
-      return
-    }
+    if(task.task_list === selectedTaskList 
+      && task.due_date === selectedDate 
+      && title === task.title){
+        setIsEditing(false);
+        return;
+      }
+    
+    try{
+      const token: string | null = localStorage.getItem('accessToken');
+      const newDate: string | null = selectedDate instanceof Date
+      ? selectedDate.toISOString().split('T')[0]
+      : selectedDate;
 
-    try {
-      const token = localStorage.getItem('accessToken');
-
-      const response = await axios.patch(
+      const response: any = await axios.patch(
         `${process.env.REACT_APP_API_URL}/api/tasks/${task.pk}/update/`,
-        { 
+        {
           title: title,
           completed: isCompleted,
-          task_list: selectedOption,
-          due_date: selectedDate && selectedDate.toISOString().split('T')[0]
+          task_list: selectedTaskList,
+          due_date: newDate
         },
         {
           headers: {
@@ -133,25 +148,27 @@ export const TaskCard = ({ task, onTaskDelete, onTaskUpdate, byDate, byList}) =>
       );
 
       if (response.status === 200) {
-        const originalDate = task.due_date;
-        const newDate = selectedDate ? selectedDate.toISOString().split('T')[0] : null;
-
-        if ((task.task_list !== selectedOption) && byList) {
-          onTaskDelete(task.pk);
-        } else if ((originalDate !== newDate) && byDate) {
-          onTaskDelete(task.pk);
-        }
-        setIsEditing(false);
+        
+        if ((task.task_list !== selectedTaskList) && byList)
+          onTaskDelete(task.pk)
+        else if ((task.due_date !== newDate) && byDate) 
+          onTaskDelete(task.pk)
+        else
+          setIsEditing(false)
       };
-    } catch (err) {
-      console.error('Error updating task:', err);
-      setToggleError(
-        err.response?.data?.error || 
-        err.response?.data?.detail || 
-        'Failed to update task status'
-      );
+
+    } catch(error) {
+      if(axios.isAxiosError(error))
+        setToggleError(
+          error.response?.data?.error || 
+          error.response?.data?.detail || 
+          'Failed to update task status'
+        );
     }
+
   }
+
+  console.log(task)
 
   return (
     <div className={`task-card ${isCompleted ? 'completed' : ''}`}>
@@ -224,10 +241,10 @@ export const TaskCard = ({ task, onTaskDelete, onTaskUpdate, byDate, byList}) =>
                 <label htmlFor="list">Move to another list</label>
                 <select 
                   id="list" 
-                  value={selectedOption} 
-                  onChange={(e) => setSelectedOption(e.target.value)}>
+                  value={selectedTaskList} 
+                  onChange={(e) => setSelectedTaskList(e.target.value)}>
                   <option value=""></option>
-                  {lists.map((list) => (
+                  {lists.map((list: List) => (
                     <option key={list.slug} value={list.slug}>
                       {list.name}
                     </option>
@@ -236,6 +253,7 @@ export const TaskCard = ({ task, onTaskDelete, onTaskUpdate, byDate, byList}) =>
               </div>
               <div className='edit-btns'>
                 <button 
+                  type="submit"
                   className='save-btn'
                   onClick={(e) => handleChangeTask(e)}
                 >Save</button>
