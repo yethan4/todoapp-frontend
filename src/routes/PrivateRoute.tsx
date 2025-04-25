@@ -1,13 +1,17 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-const PrivateRoute = ({ element }) => {
+interface RouteProps {
+  element: React.ReactNode;
+}
+
+const PrivateRoute = ({ element }: RouteProps) => {
   const { isLoggedIn } = useAuth();
 
   return isLoggedIn ? element : <Navigate to="/login" />;
 };
 
-const PublicRoute = ({ element }) => {
+const PublicRoute = ({ element }: RouteProps) => {
   const { isLoggedIn } = useAuth();
 
   return !isLoggedIn ? element : <Navigate to="/" />;

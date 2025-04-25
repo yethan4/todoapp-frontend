@@ -12,7 +12,6 @@ export const Header = () => {
     setDropDown(!dropDown);
   }
 
-
   return (
     <header>
       <div className="logo">
@@ -28,7 +27,7 @@ export const Header = () => {
           <ul>
             <li className="user-info">
               <i className="bi bi-person-circle"></i>
-              <span>{user.email}</span>
+              <span>{user?.email}</span>
             </li>
             <li onClick={logout}>Sign out</li>
           </ul>

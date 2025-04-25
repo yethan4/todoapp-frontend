@@ -11,12 +11,14 @@ interface AuthContextType {
   user: User | null;
   isLoggedIn: boolean;
   logout: () => void;
+  checkLoggedInUser: () => void;
 }
 
 const contextInitialValues = {
   user: null,
   isLoggedIn: false,
-  logout: () => {}
+  logout: () => {},
+  checkLoggedInUser: () => {},
 }
 
 const AuthContext = createContext<AuthContextType>(contextInitialValues)
@@ -80,7 +82,7 @@ export const AuthProvider = ({ children }: Props) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, logout, user}}>
+    <AuthContext.Provider value={{ isLoggedIn, logout, user, checkLoggedInUser}}>
       {children}
     </AuthContext.Provider>
   );
