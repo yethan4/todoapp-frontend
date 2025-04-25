@@ -2,7 +2,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import "./Sidebar.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CreateList } from "../CreateList";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -12,15 +12,14 @@ export const Sidebar = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const { lists, setLists } = useLists();
-  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const fetchLists = async () => {
+  const fetchLists = useCallback(async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await axios.get('http://localhost:8000/api/lists/', {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/lists/`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -28,16 +27,15 @@ export const Sidebar = () => {
       setLists(response.data)
     } catch (err) {
       console.log(err)
-    } finally {
-      setIsLoading(false)
     }
-  }
+  }, [setLists])
 
   const handleDeleteList = async (slug) => {
     try {
       const token = localStorage.getItem('accessToken');
+      // eslint-disable-next-line
       const response = await axios.delete(
-        `http://localhost:8000/api/lists/${slug}`,
+        `${process.env.REACT_APP_API_URL}/api/lists/${slug}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -61,7 +59,7 @@ export const Sidebar = () => {
   useEffect(() => {
 
     fetchLists();
-  }, [])
+  }, [fetchLists])
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -70,7 +68,7 @@ export const Sidebar = () => {
     } else {
       fetchLists();
     }
-  }, [location.search]);
+  }, [location.search, fetchLists]);
 
   const activeTaskListSlug = new URLSearchParams(location.search).get('task_list');
 

@@ -29,7 +29,7 @@ export const CreateList = ({onListCreated}) => {
     try {
       const token = localStorage.getItem('accessToken');
       const response = await axios.post(
-        'http://localhost:8000/api/lists/',
+        `${process.env.REACT_APP_API_URL}/api/lists/`,
         {
           name: inputValue,
           slug: slug

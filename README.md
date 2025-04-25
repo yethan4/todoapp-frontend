@@ -1,5 +1,8 @@
 # To-Do App
 
+The backend is hosted on Render, so it may take up to a minute to start after the first request. Thank you for your patience!<br>
+[todoapp-yethan.netlify.app](https://todoapp-yethan.netlify.app/login)
+
 ## Technologies Used
 
 - **Frontend**: React
@@ -7,10 +10,10 @@
 
 ## Description
 
-The backend, built with Django REST Framework, provides a RESTful API for managing tasks — including creating, deleting, and marking them as completed or not. It also handles user authentication using JWT (JSON Web Tokens) to ensure secure access to user-specific data. 
+The backend, built with Django REST Framework, provides a RESTful API for managing tasks — including creating, deleting, editing, and marking them as completed or not. It also handles user authentication using JWT (JSON Web Tokens) to ensure secure access to user-specific data.
 [backend-code](https://github.com/yethan4/todoapp-backend)
 
-The frontend, built with React, offers a clean and interactive user interface for viewing tasks, creating new ones, deleting them, and toggling their completion status. It communicates with the backend via HTTP requests, using JWT for authentication, which allows secure, stateless communication between the client and server.
+The frontend, built with React, offers a clean and interactive user interface for viewing tasks, creating new ones, deleting them, and editing their content or completion status. It communicates with the backend via HTTP requests, using JWT for authentication, which allows secure, stateless communication between the client and server.
 
 ## Purpose & Notes
 
@@ -23,7 +26,7 @@ This is a very simple and basic application, created primarily to demonstrate my
 While the frontend currently lacks optimization and polish, it serves its purpose as a working interface. I plan to improve and expand the application in the future by adding more features, better UI/UX, persistent storage, and more advanced functionality.
 
 
-## Installation
+## Installation – I’ll update this soon.
 
 ### Backend Setup Instructions
 

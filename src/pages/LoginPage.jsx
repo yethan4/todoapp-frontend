@@ -31,7 +31,7 @@ export const LoginPage = () => {
     setErrors({});
 
     try {
-      const response = await axios.post("http://localhost:8000/api/login/", formData);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/login/`, formData);
       console.log("Success!", response.data);
       localStorage.setItem("accessToken", response.data.access);
       localStorage.setItem("refreshToken", response.data.refresh);
