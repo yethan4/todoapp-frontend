@@ -1,8 +1,9 @@
 import {Routes, Route} from "react-router-dom";
 import { HomePage, LoginPage, RegisterPage } from "../pages";
 import { PrivateRoute, PublicRoute } from "./PrivateRoute";
+import { ReactElement } from 'react';
 
-export const AllRoutes = () => {
+export const AllRoutes = (): ReactElement => {
   return (
     <Routes>
       <Route path="/" element={<PrivateRoute element={<HomePage />} />} />

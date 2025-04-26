@@ -2,39 +2,25 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import "./Sidebar.css";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { CreateList } from "../CreateList";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useLists } from "../../context/ListContext";
 
 export const Sidebar = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
-  const { lists, setLists } = useLists();
+  const { lists, onListDelete } = useLists();
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const fetchLists = useCallback(async () => {
+  const handleDeleteList = async (slug: string) => {
     try {
-      const token = localStorage.getItem('accessToken');
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/lists/`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      setLists(response.data)
-    } catch (err) {
-      console.log(err)
-    }
-  }, [setLists])
+      const token: string | null = localStorage.getItem('accessToken');
 
-  const handleDeleteList = async (slug) => {
-    try {
-      const token = localStorage.getItem('accessToken');
-      // eslint-disable-next-line
-      const response = await axios.delete(
+      await axios.delete(
         `${process.env.REACT_APP_API_URL}/api/lists/${slug}`,
         {
           headers: {
@@ -43,32 +29,23 @@ export const Sidebar = () => {
           }
         }
       )
+      onListDelete(slug);
       navigate("/")
-    } catch (err) {
-      console.log(err)
+    } catch (error) {
+      if(axios.isAxiosError(error))
+        console.log(error)
     }
-  }
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  
-    const formatted = date.toLocaleDateString('en-CA');
-    navigate(`/?date=${formatted}`);
   };
 
-  useEffect(() => {
-
-    fetchLists();
-  }, [fetchLists])
-
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    if (params.has('task_list')) {
-      setSelectedDate(null);
-    } else {
-      fetchLists();
+  const handleDateChange = (date: Date | null) => {
+    setSelectedDate(date);
+  
+    if(date){
+      const formatted = date.toLocaleDateString('en-CA');
+      navigate(`/?date=${formatted}`);
     }
-  }, [location.search, fetchLists]);
+  };
+
 
   const activeTaskListSlug = new URLSearchParams(location.search).get('task_list');
 
@@ -80,7 +57,7 @@ export const Sidebar = () => {
         inline
       />
       <div className="categories">
-        <CreateList onListCreated={fetchLists} />
+        <CreateList />
         <ul>
           {lists.length > 0 && lists.map((list) => (
             <li 

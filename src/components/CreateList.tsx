@@ -1,11 +1,14 @@
 import { useRef } from "react";
 import "./CreateList.css"
 import axios from "axios";
+import { useLists } from "../context/ListContext";
 
-export const CreateList = ({onListCreated}) => {
-  const inputRef = useRef(null);
+export const CreateList = () => {
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const createSlug = (input) => {
+  const { onListAdd } = useLists();
+
+  const createSlug = (input: string) => {
     return input
       .toString()
       .toLowerCase()
@@ -20,15 +23,17 @@ export const CreateList = ({onListCreated}) => {
       .replace(/-+$/, '');             
     }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    const inputValue = inputRef.current.value
-    const slug = createSlug(inputValue)
+    if(!inputRef.current?.value) return
+
+    const inputValue: string = inputRef.current.value
+    const slug: string = createSlug(inputValue)
 
     try {
-      const token = localStorage.getItem('accessToken');
-      const response = await axios.post(
+      const token: string | null = localStorage.getItem('accessToken');
+      const response: any = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/lists/`,
         {
           name: inputValue,
@@ -41,11 +46,11 @@ export const CreateList = ({onListCreated}) => {
           }
         }
       )
-      onListCreated();
-      console.log('List created:', response.data);
+      onListAdd(response.data);
       inputRef.current.value = "";
     } catch (err) {
-      console.log(err)
+      if(axios.isAxiosError(err))
+        console.log(err)
     }
 
     inputRef.current.value = "";

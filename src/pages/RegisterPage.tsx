@@ -1,42 +1,67 @@
 import React, { useState } from 'react';
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Link } from 'react-router-dom';
 
+interface FormData {
+  username: string;
+  email: string;
+  password1: string;
+  password2: string;
+}
+
+interface ApiErrors {
+  username?: string[];
+  email?: string[];
+  password1?: string[];
+  password2?: string[];
+  non_field_errors?: string[];
+  [key: string]: any;
+}
+
 export const RegisterPage = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     username: "",
     email: "",
     password1: "",
     password2: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(null);
-  const [errors, setErrors] = useState({});
+  
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errors, setErrors] = useState<ApiErrors>({});
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    if (isLoading) {
-      return;
-    }
+    if (isLoading) return;
 
     setIsLoading(true);
     setErrors({});
+    setSuccessMessage(null);
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/register/`, formData);
+      const response: any = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/register/`, 
+        formData
+      );
+      
       console.log("Success!", response.data);
       setSuccessMessage("Registration Successful!");
     } catch (error) {
-      console.log("Error during registration!", error.response?.data);
-      if (error.response && error.response.data) {
-        setErrors(error.response.data); 
+      const axiosError = error as AxiosError<ApiErrors>;
+      console.log("Error during registration!", axiosError.response?.data);
+      
+      if (axiosError.response?.data) {
+        setErrors(axiosError.response.data);
+      } else {
+        setErrors({ non_field_errors: ["An unexpected error occurred"] });
       }
     } finally {
       setIsLoading(false);
